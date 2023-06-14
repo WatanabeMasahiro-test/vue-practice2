@@ -2,10 +2,16 @@
 import { ref, onMounted } from 'vue'
 import ComponentTest1 from './components/ComponentTest1.vue'
 import axios from 'axios'
+import {type Bpi, type DbJson} from './composables/types/interface'
 
-const title = 'ここにタイトル'
-const bpi:any = ref(null)
-const dbJson:any = ref(null)
+const title = ref<string>('ここにタイトル')
+
+const bpi = ref<Bpi[]>()
+const bpiIsBoolean = ref<Boolean>()
+
+// let dbJson = reactive({} as DbJson)
+const dbJson = ref<DbJson[]>()
+let dbJsonIsBoolean = ref<Boolean>()
 
 const testMethod = () => alert('HELLO!')
 const handleEvent = () => alert('子コンポーネントからの通知')
@@ -19,7 +25,7 @@ onMounted(() => {
     })
   } catch(error) {
       console.log(error)
-      bpi.value = null
+      bpiIsBoolean.value = false
   }
 
   try {
@@ -30,7 +36,7 @@ onMounted(() => {
     })
   } catch(error) {
       console.log(error)
-      dbJson.value = null
+      dbJsonIsBoolean.value = false
   }
 })
 </script>
@@ -43,17 +49,16 @@ onMounted(() => {
     <button @click="testMethod()">おためし</button>
     <hr class="double-line">
     <div class="bg-silver p-20px">
-      <table v-if="bpi != false">
+      <table v-if="bpiIsBoolean !== false">
         <tr>
           <th></th>
-          <th v-for="i in 5" :key="i">{{ i }}</th>
+          <th v-for="i in 4" :key="i">{{ i }}</th>
         </tr>
         <tr
           v-for="(item, index) in bpi"
-          :key="item.id"
+          :key="index"
         >
-          <th>{{ index }}</th>
-          <td>{{ item.code as string }}</td>
+          <td>{{ item.code  }}</td>
           <td>{{ item.symbol }}</td>
           <td>{{ item.rate }}</td>
           <td>{{ item.description }}</td>
@@ -61,13 +66,13 @@ onMounted(() => {
         </tr>
       </table>
 
-      <table v-if="dbJson != false">
+      <table v-if="dbJsonIsBoolean !== false">
         <tr>
           <th></th>
           <th v-for="i in 2" :key="i" class="w-100">{{ i }}</th>
         </tr>
         <tr
-          v-for="(item) in dbJson"
+          v-for="item in dbJson"
           :key="item.id"
         >
           <th>{{ item.id }}</th>
@@ -79,9 +84,14 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
-  body {
+<style scoped>
+  h1 {
     text-align: center;
+  }
+
+  img, button {
+    display: block;
+    margin: 10px auto;
   }
 
   table, td, th {

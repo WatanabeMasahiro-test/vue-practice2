@@ -20,5 +20,12 @@ const emit = defineEmits(['notification'])
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  div p {
+    text-align: center;
+  }
 
+  button {
+    display: block;
+    margin: 10px auto;
+  }
 </style>
